@@ -137,7 +137,7 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
         enabledFeatures,
         refreshInterval,
         // TODO: Replace with your actual WebSocket URL
-        websocketUrl: process.env.REACT_APP_WS_URL,
+        websocketUrl: import.meta.env.VITE_WS_URL,
       };
 
       await realTimeMonitoring.initialize(config);
