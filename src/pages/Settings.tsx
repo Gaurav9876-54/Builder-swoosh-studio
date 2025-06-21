@@ -12,8 +12,11 @@ import {
   LogOut,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Settings = () => {
+  const { logout } = useAuth();
+
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
@@ -174,6 +177,7 @@ const Settings = () => {
           <CardContent className="p-4">
             <Button
               variant="outline"
+              onClick={logout}
               className="w-full justify-start text-destructive border-destructive hover:bg-destructive hover:text-destructive-foreground"
             >
               <LogOut className="h-4 w-4 mr-2" />
