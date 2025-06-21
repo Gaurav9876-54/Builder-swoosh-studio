@@ -343,6 +343,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
             dispatch({ type: "LOGIN_SUCCESS", payload: result });
           })
           .catch(() => {
+            // Clear invalid token and stop loading
+            localStorage.removeItem("safeguard_token");
+            localStorage.removeItem("safeguard_refresh");
             dispatch({ type: "SET_LOADING", payload: false });
           });
       }, 1000);
