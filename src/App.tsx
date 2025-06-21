@@ -32,6 +32,9 @@ import ParentProfile from "./pages/profile/ParentProfile";
 // Family Management
 import FamilyManagement from "./pages/family/FamilyManagement";
 
+// Splash Screen
+import SplashPage from "./pages/SplashPage";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +47,9 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            {/* Splash Screen */}
+            <Route path="/splash" element={<SplashPage />} />
+
             {/* Authentication Routes */}
             <Route
               path="/auth/login"
