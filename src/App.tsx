@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 // Protected Pages
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import ActivityOverview from "./pages/ActivityOverview";
 import Alerts from "./pages/Alerts";
 import AlertsEnhanced from "./pages/AlertsEnhanced";
 import ScreenTime from "./pages/ScreenTime";
@@ -126,6 +127,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/activity-overview"
+              element={
+                <ProtectedRoute>
+                  <ActivityOverview />
                 </ProtectedRoute>
               }
             />
