@@ -109,14 +109,18 @@ const Settings = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
+            <Link to="/family">
+              <Button variant="outline" className="w-full justify-start">
+                Manage Family
+              </Button>
+            </Link>
+            <Link to="/family">
+              <Button variant="outline" className="w-full justify-start">
+                Add Child Profile
+              </Button>
+            </Link>
             <Button variant="outline" className="w-full justify-start">
-              Add Family Member
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              Manage Child Profiles
-            </Button>
-            <Button variant="outline" className="w-full justify-start">
-              Parental Controls
+              Emergency Contacts
             </Button>
           </CardContent>
         </Card>
