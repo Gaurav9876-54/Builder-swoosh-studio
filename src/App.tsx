@@ -50,6 +50,16 @@ const App = () => (
             {/* Splash Screen */}
             <Route path="/splash" element={<SplashPage />} />
 
+            {/* Root redirect to splash for first-time visitors */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
+
             {/* Authentication Routes */}
             <Route
               path="/auth/login"
@@ -111,14 +121,6 @@ const App = () => (
             />
 
             {/* Protected App Routes */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
             <Route
               path="/dashboard"
               element={
