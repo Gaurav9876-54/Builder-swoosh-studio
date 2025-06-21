@@ -175,7 +175,7 @@ const Login = () => {
         </Card>
 
         {/* Sign Up Link */}
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <p className="text-muted-foreground">
             Don't have an account?{" "}
             <Link
@@ -183,6 +183,15 @@ const Login = () => {
               className="text-primary hover:underline font-medium"
             >
               Create your family account
+            </Link>
+          </p>
+          <p className="text-xs text-muted-foreground">
+            New to Safe Guard?{" "}
+            <Link
+              to="/splash"
+              className="text-primary hover:underline font-medium"
+            >
+              Learn more
             </Link>
           </p>
         </div>
