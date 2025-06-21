@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({
   children,
   requiresAuth = true,
-  redirectTo = "/splash",
+  redirectTo,
 }: ProtectedRouteProps) => {
   const { state } = useAuth();
   const location = useLocation();
@@ -28,8 +28,18 @@ export const ProtectedRoute = ({
   }
 
   if (requiresAuth && !state.isAuthenticated) {
-    // Redirect to login with return path
-    return <Navigate to={redirectTo} state={{ from: location }} replace />;
+    // Determine redirect destination
+    const hasSeenApp = localStorage.getItem("safeguard_has_seen_app");
+    const defaultRedirect = hasSeenApp ? "/auth/login" : "/splash";
+
+    // Redirect with return path
+    return (
+      <Navigate
+        to={redirectTo || defaultRedirect}
+        state={{ from: location }}
+        replace
+      />
+    );
   }
 
   if (!requiresAuth && state.isAuthenticated) {
