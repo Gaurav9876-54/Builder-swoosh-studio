@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRealTimeData } from "@/hooks/useRealTimeData";
+import { RealTimeMonitor, LiveIndicator } from "@/components/RealTimeMonitor";
 import { MobileNav, SOSButton } from "@/components/ui/mobile-nav";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -232,6 +234,35 @@ const ActivityOverview = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
 
+  // Real-time monitoring integration
+  const {
+    data: realTimeData,
+    isConnected: isRealTimeConnected,
+    connectionStatus,
+    getChildScreenTime,
+    getRecentAlerts,
+    eventCount,
+  } = useRealTimeData({
+    onEvent: (event) => {
+      // Handle real-time events
+      console.log("Real-time event received:", event);
+
+      // Update alerts when safety events occur
+      if (event.type === "safety_alert") {
+        setAlerts((prev) => [event, ...prev.slice(0, 19)]); // Keep last 20 alerts
+      }
+
+      // Refresh activity data when significant events occur
+      if (event.type === "screen_time" || event.type === "app_usage") {
+        // Optionally refresh activity data
+        // fetchActivityData();
+      }
+    },
+    onError: (error) => {
+      console.error("Real-time monitoring error:", error);
+    },
+  });
+
   // Fetch activity data when component mounts or filters change
   useEffect(() => {
     const fetchActivityData = async () => {
@@ -243,8 +274,31 @@ const ActivityOverview = () => {
           activityAPI.getActivityAlerts(state.family?.id || ""),
         ]);
 
+        // Merge with real-time data if available
+        if (isRealTimeConnected) {
+          // Update with latest real-time screen time data
+          state.children.forEach((child) => {
+            const realTimeScreenTime = getChildScreenTime(child.id);
+            if (realTimeScreenTime && overview.summary) {
+              // Update current usage with real-time data
+              overview.summary.totalScreenTime =
+                overview.summary.totalScreenTime || 0;
+              // Add logic to merge real-time screen time data
+            }
+          });
+
+          // Use real-time alerts if available
+          const realTimeAlerts = getRecentAlerts(20);
+          if (realTimeAlerts.length > 0) {
+            setAlerts(realTimeAlerts);
+          } else {
+            setAlerts(alertsData);
+          }
+        } else {
+          setAlerts(alertsData);
+        }
+
         setActivityData(overview);
-        setAlerts(alertsData);
       } catch (error) {
         console.error("Failed to fetch activity data:", error);
         // TODO: Show error toast
@@ -378,6 +432,24 @@ const ActivityOverview = () => {
             <h1 className="text-lg font-semibold">Activity Overview</h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Real-time connection indicator */}
+            <div className="flex items-center gap-1">
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  isRealTimeConnected
+                    ? "bg-green-500 animate-pulse"
+                    : "bg-gray-400"
+                }`}
+              />
+              <span className="text-xs text-muted-foreground">
+                {connectionStatus === "connected"
+                  ? "Live"
+                  : connectionStatus === "polling"
+                    ? "Polling"
+                    : "Offline"}
+              </span>
+            </div>
+
             <Button
               variant="ghost"
               size="icon"
@@ -426,6 +498,9 @@ const ActivityOverview = () => {
             </SelectContent>
           </Select>
         </div>
+
+        {/* Real-Time Monitoring */}
+        <RealTimeMonitor showConnectionStatus={true} showHealth={false} />
 
         {/* Quick Stats */}
         <div className="grid grid-cols-2 gap-3">
@@ -724,6 +799,7 @@ const ActivityOverview = () => {
 
       <MobileNav />
       <SOSButton />
+      <LiveIndicator />
     </div>
   );
 };
