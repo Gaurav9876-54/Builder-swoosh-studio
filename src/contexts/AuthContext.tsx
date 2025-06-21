@@ -359,6 +359,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Store tokens
       localStorage.setItem("safeguard_token", result.tokens.access);
       localStorage.setItem("safeguard_refresh", result.tokens.refresh);
+      localStorage.setItem("safeguard_has_seen_app", "true");
 
       if (credentials.rememberMe) {
         localStorage.setItem("safeguard_remember", "true");
@@ -378,6 +379,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       localStorage.setItem("safeguard_token", result.tokens.access);
       localStorage.setItem("safeguard_refresh", result.tokens.refresh);
+      localStorage.setItem("safeguard_has_seen_app", "true");
 
       dispatch({ type: "LOGIN_SUCCESS", payload: result });
     } catch (error) {
