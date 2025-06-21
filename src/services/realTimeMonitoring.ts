@@ -1,6 +1,8 @@
 // Real-time monitoring service for Safe Guard
 // This service handles WebSocket connections, API polling, and real-time updates
 
+import { API_URL } from "@/config/env";
+
 export interface RealTimeEvent {
   id: string;
   type:
@@ -34,7 +36,7 @@ class RealTimeMonitoringService {
   private isConnected = false;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
-  private baseApiUrl = import.meta.env.VITE_API_URL || "/api";
+  private baseApiUrl = API_URL;
 
   // Initialize real-time monitoring
   async initialize(config: MonitoringConfig): Promise<void> {
