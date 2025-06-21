@@ -391,6 +391,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("safeguard_refresh");
     localStorage.removeItem("safeguard_remember");
     dispatch({ type: "LOGOUT" });
+
+    // Redirect to login page after logout
+    window.location.href = "/auth/login";
   };
 
   const addChild = async (childData: ChildRegistrationData) => {
