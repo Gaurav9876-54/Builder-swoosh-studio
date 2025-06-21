@@ -28,9 +28,14 @@ export const ProtectedRoute = ({
   }
 
   if (requiresAuth && !state.isAuthenticated) {
-    // Determine redirect destination
+    // Check if user has tokens (just logged out) vs never logged in
+    const hasToken = localStorage.getItem("safeguard_token");
     const hasSeenApp = localStorage.getItem("safeguard_has_seen_app");
-    const defaultRedirect = hasSeenApp ? "/auth/login" : "/splash";
+
+    // If no token and never seen app, show splash screen
+    // Otherwise go to login
+    const defaultRedirect =
+      !hasToken && !hasSeenApp ? "/splash" : "/auth/login";
 
     // Redirect with return path
     return (
