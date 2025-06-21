@@ -389,14 +389,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const logout = () => {
+    // Clear all auth data
     localStorage.removeItem("safeguard_token");
     localStorage.removeItem("safeguard_refresh");
     localStorage.removeItem("safeguard_remember");
-    // Keep the has_seen_app flag so returning users go to login, not splash
+
+    // Clear auth state
     dispatch({ type: "LOGOUT" });
 
-    // Redirect to login page after logout
-    window.location.href = "/auth/login";
+    // Force redirect to login page, bypassing React Router
+    setTimeout(() => {
+      window.location.replace("/auth/login");
+    }, 100);
   };
 
   const addChild = async (childData: ChildRegistrationData) => {
