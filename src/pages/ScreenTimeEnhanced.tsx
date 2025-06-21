@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRealTimeData } from "@/hooks/useRealTimeData";
+import {
+  LiveIndicator,
+  ConnectionIndicator,
+} from "@/components/RealTimeMonitor";
 import { MobileNav, SOSButton } from "@/components/ui/mobile-nav";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,6 +49,10 @@ const ScreenTimeEnhanced = () => {
   const [tempSettings, setTempSettings] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
 
+  // Real-time data integration
+  const { getChildScreenTime, isConnected: isRealTimeConnected } =
+    useRealTimeData();
+
   // Update current time every minute
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,9 +90,17 @@ const ScreenTimeEnhanced = () => {
   };
 
   const getTimeRemaining = (child: Child) => {
-    const used = child.screenTime.today;
+    // Use real-time data if available
+    const realTimeData = getChildScreenTime(child.id);
+    const used = realTimeData?.currentUsage || child.screenTime.today;
     const limit = child.settings.screenTime.dailyLimit;
     return Math.max(0, limit - used);
+  };
+
+  const getCurrentUsage = (child: Child) => {
+    // Use real-time data if available
+    const realTimeData = getChildScreenTime(child.id);
+    return realTimeData?.currentUsage || child.screenTime.today;
   };
 
   const isWithinAllowedHours = (child: Child) => {
@@ -145,6 +162,7 @@ const ScreenTimeEnhanced = () => {
             </Link>
             <h1 className="text-lg font-semibold">Screen Time</h1>
           </div>
+          <ConnectionIndicator />
         </header>
 
         <main className="max-w-md mx-auto px-4 py-6">
@@ -341,13 +359,13 @@ const ScreenTimeEnhanced = () => {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Today's Usage</span>
                 <span className="text-sm text-muted-foreground">
-                  {formatTime(selectedChild.screenTime.today)} /{" "}
+                  {formatTime(getCurrentUsage(selectedChild))} /{" "}
                   {formatTime(selectedChild.settings.screenTime.dailyLimit)}
                 </span>
               </div>
               <Progress
                 value={
-                  (selectedChild.screenTime.today /
+                  (getCurrentUsage(selectedChild) /
                     selectedChild.settings.screenTime.dailyLimit) *
                   100
                 }
@@ -356,6 +374,9 @@ const ScreenTimeEnhanced = () => {
               <div className="flex items-center justify-between mt-2 text-sm">
                 <span className="text-muted-foreground">
                   {formatTime(getTimeRemaining(selectedChild))} remaining
+                  {isRealTimeConnected && (
+                    <span className="ml-1 text-green-600">● Live</span>
+                  )}
                 </span>
                 {!isWithinAllowedHours(selectedChild) && (
                   <Badge variant="secondary">Outside allowed hours</Badge>
@@ -538,6 +559,7 @@ const ScreenTimeEnhanced = () => {
 
       <MobileNav />
       <SOSButton />
+      <LiveIndicator />
     </div>
   );
 };
