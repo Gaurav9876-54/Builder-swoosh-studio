@@ -24,6 +24,9 @@ import Welcome from "./pages/onboarding/Welcome";
 import FamilySetup from "./pages/onboarding/FamilySetup";
 import AddChild from "./pages/onboarding/AddChild";
 
+// Profile Pages
+import ParentProfile from "./pages/profile/ParentProfile";
+
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -134,6 +137,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ParentProfile />
                 </ProtectedRoute>
               }
             />
