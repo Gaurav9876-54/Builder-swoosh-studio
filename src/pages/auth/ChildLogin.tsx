@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useChildAuth } from "@/contexts/ChildAuthContext";
 import { SafeGuardLogo } from "@/components/SafeGuardLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,11 +50,15 @@ const mockChildren = [
 
 const ChildLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useChildAuth();
   const [selectedChild, setSelectedChild] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const from = location.state?.from?.pathname || "/child-dashboard";
 
   const handleChildSelect = (childId: string) => {
     setSelectedChild(childId);
@@ -76,12 +81,8 @@ const ChildLogin = () => {
     setError("");
 
     try {
-      // Simulate child authentication
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // In a real app, this would authenticate the child and set their session
-      console.log(`Child ${selectedChild} authenticated`);
-      navigate("/child-dashboard");
+      await login(selectedChild, password);
+      navigate(from, { replace: true });
     } catch (err) {
       setError("Incorrect password. Please try again or ask your parent.");
     } finally {
