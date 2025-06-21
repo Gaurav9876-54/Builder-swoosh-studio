@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { SafeGuardLogo } from "@/components/SafeGuardLogo";
@@ -26,6 +26,36 @@ const Login = () => {
   const [error, setError] = useState("");
 
   const from = location.state?.from?.pathname || "/";
+
+  // Auto-login for demo mode
+  useEffect(() => {
+    const isDemoMode = localStorage.getItem("safeguard_demo_mode");
+    if (isDemoMode) {
+      // Auto-fill demo credentials and login
+      setFormData({
+        email: "demo@safeguard.com",
+        password: "demo123",
+        rememberMe: false,
+      });
+
+      // Auto-submit after a brief delay to show the form
+      const autoLogin = async () => {
+        setIsLoading(true);
+        try {
+          await login({
+            email: "demo@safeguard.com",
+            password: "demo123",
+          });
+          navigate(from, { replace: true });
+        } catch (err) {
+          setError("Demo login failed. Please try again.");
+          setIsLoading(false);
+        }
+      };
+
+      setTimeout(autoLogin, 800);
+    }
+  }, [login, navigate, from]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
