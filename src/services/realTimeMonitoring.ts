@@ -34,7 +34,7 @@ class RealTimeMonitoringService {
   private isConnected = false;
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
-  private baseApiUrl = process.env.REACT_APP_API_URL || "/api";
+  private baseApiUrl = import.meta.env.VITE_API_URL || "/api";
 
   // Initialize real-time monitoring
   async initialize(config: MonitoringConfig): Promise<void> {
