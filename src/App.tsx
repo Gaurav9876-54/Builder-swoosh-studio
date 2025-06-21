@@ -41,141 +41,149 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Splash Screen */}
-            <Route path="/splash" element={<SplashPage />} />
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          {/* Splash Screen - Outside AuthProvider to avoid conflicts */}
+          <Route path="/splash" element={<SplashPage />} />
 
-            {/* Root redirect to splash for first-time visitors */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            />
+          {/* All other routes need AuthProvider */}
+          <Route
+            path="/*"
+            element={
+              <AuthProvider>
+                <Routes>
+                  {/* Root redirect to splash for first-time visitors */}
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Index />
+                      </ProtectedRoute>
+                    }
+                  />
 
-            {/* Authentication Routes */}
-            <Route
-              path="/auth/login"
-              element={
-                <ProtectedRoute requiresAuth={false}>
-                  <Login />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/auth/register"
-              element={
-                <ProtectedRoute requiresAuth={false}>
-                  <Register />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/auth/child-login"
-              element={
-                <ProtectedRoute requiresAuth={false}>
-                  <ChildLogin />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/auth/forgot-password"
-              element={
-                <ProtectedRoute requiresAuth={false}>
-                  <ForgotPassword />
-                </ProtectedRoute>
-              }
-            />
+                  {/* Authentication Routes */}
+                  <Route
+                    path="/auth/login"
+                    element={
+                      <ProtectedRoute requiresAuth={false}>
+                        <Login />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/auth/register"
+                    element={
+                      <ProtectedRoute requiresAuth={false}>
+                        <Register />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/auth/child-login"
+                    element={
+                      <ProtectedRoute requiresAuth={false}>
+                        <ChildLogin />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/auth/forgot-password"
+                    element={
+                      <ProtectedRoute requiresAuth={false}>
+                        <ForgotPassword />
+                      </ProtectedRoute>
+                    }
+                  />
 
-            {/* Onboarding Routes */}
-            <Route
-              path="/onboarding/welcome"
-              element={
-                <ProtectedRoute>
-                  <Welcome />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/onboarding/family-setup"
-              element={
-                <ProtectedRoute>
-                  <FamilySetup />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/onboarding/add-child"
-              element={
-                <ProtectedRoute>
-                  <AddChild />
-                </ProtectedRoute>
-              }
-            />
+                  {/* Onboarding Routes */}
+                  <Route
+                    path="/onboarding/welcome"
+                    element={
+                      <ProtectedRoute>
+                        <Welcome />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/onboarding/family-setup"
+                    element={
+                      <ProtectedRoute>
+                        <FamilySetup />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/onboarding/add-child"
+                    element={
+                      <ProtectedRoute>
+                        <AddChild />
+                      </ProtectedRoute>
+                    }
+                  />
 
-            {/* Protected App Routes */}
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/alerts"
-              element={
-                <ProtectedRoute>
-                  <AlertsEnhanced />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/screen-time"
-              element={
-                <ProtectedRoute>
-                  <ScreenTimeEnhanced />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/family"
-              element={
-                <ProtectedRoute>
-                  <FamilyManagement />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings"
-              element={
-                <ProtectedRoute>
-                  <Settings />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <ParentProfile />
-                </ProtectedRoute>
-              }
-            />
+                  {/* Protected App Routes */}
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/alerts"
+                    element={
+                      <ProtectedRoute>
+                        <AlertsEnhanced />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/screen-time"
+                    element={
+                      <ProtectedRoute>
+                        <ScreenTimeEnhanced />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/family"
+                    element={
+                      <ProtectedRoute>
+                        <FamilyManagement />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/settings"
+                    element={
+                      <ProtectedRoute>
+                        <Settings />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ParentProfile />
+                      </ProtectedRoute>
+                    }
+                  />
 
-            {/* Catch-all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </AuthProvider>
+                  {/* Catch-all route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </AuthProvider>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
