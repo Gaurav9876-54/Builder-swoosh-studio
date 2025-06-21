@@ -121,6 +121,29 @@ const Settings = () => {
           </CardContent>
         </Card>
 
+        {/* Account */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              Account
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Link to="/profile">
+              <Button variant="outline" className="w-full justify-start">
+                Edit Profile
+              </Button>
+            </Link>
+            <Button variant="outline" className="w-full justify-start">
+              Subscription
+            </Button>
+            <Button variant="outline" className="w-full justify-start">
+              Data & Privacy
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Support */}
         <Card>
           <CardHeader>
