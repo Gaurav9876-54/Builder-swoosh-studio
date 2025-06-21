@@ -11,7 +11,7 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({
   children,
   requiresAuth = true,
-  redirectTo = "/auth/login",
+  redirectTo = "/splash",
 }: ProtectedRouteProps) => {
   const { state } = useAuth();
   const location = useLocation();
