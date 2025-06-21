@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useChildAuth } from "@/contexts/ChildAuthContext";
 import { useRealTimeData } from "@/hooks/useRealTimeData";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -131,13 +132,102 @@ const getCurrentChild = (children: any[], userId: string) => {
 };
 
 const ChildDashboard = () => {
-  const { state, logout } = useAuth();
+  const { state: parentState } = useAuth();
+  const { state: childState, logout, requestHelp } = useChildAuth();
   const { getChildScreenTime } = useRealTimeData();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showTimeWarning, setShowTimeWarning] = useState(false);
 
-  // Get current child data
-  const currentChild = getCurrentChild(state.children, state.user?.id || "");
+  // Get current child data - prefer child auth data, fallback to mock data
+  const currentChild = childState.user
+    ? {
+        id: childState.user.id,
+        firstName: childState.user.firstName,
+        lastName: childState.user.lastName,
+        age: childState.user.age,
+        avatar: childState.user.avatar,
+        screenTime: {
+          today: childState.screenTimeToday,
+          dailyAverage: 150,
+          thisWeek: 840,
+        },
+        settings: {
+          screenTime: {
+            dailyLimit: 180, // 3 hours
+            bedtime: "20:00",
+            wakeupTime: "07:00",
+          },
+        },
+        achievements: [
+          {
+            id: 1,
+            name: "Study Star",
+            icon: Star,
+            earned: true,
+            description: "Completed 5 educational activities",
+          },
+          {
+            id: 2,
+            name: "Time Master",
+            icon: Clock,
+            earned: true,
+            description: "Stayed within screen time for a week",
+          },
+          {
+            id: 3,
+            name: "Explorer",
+            icon: Target,
+            earned: false,
+            description: "Try 10 new educational apps",
+          },
+          {
+            id: 4,
+            name: "Helper",
+            icon: Heart,
+            earned: true,
+            description: "Asked for help when needed",
+          },
+        ],
+        activities: [
+          {
+            name: "Khan Academy Kids",
+            time: 45,
+            category: "educational",
+            icon: BookOpen,
+            color: "bg-green-100 text-green-700",
+          },
+          {
+            name: "Scratch Jr",
+            time: 30,
+            category: "creative",
+            icon: Code,
+            color: "bg-purple-100 text-purple-700",
+          },
+          {
+            name: "Math Games",
+            time: 25,
+            category: "educational",
+            icon: Calculator,
+            color: "bg-blue-100 text-blue-700",
+          },
+          {
+            name: "Drawing App",
+            time: 20,
+            category: "creative",
+            icon: Palette,
+            color: "bg-pink-100 text-pink-700",
+          },
+        ],
+        rewards: {
+          points: 850,
+          level: 3,
+          nextLevelPoints: 1000,
+          weeklyGoal: 500,
+          weeklyProgress: 350,
+        },
+      }
+    : getCurrentChild(parentState.children, parentState.user?.id || "");
+
   const realTimeData = getChildScreenTime(currentChild.id);
 
   // Update time every minute
@@ -716,7 +806,12 @@ const ChildDashboard = () => {
                 <p className="text-red-600 text-sm mb-3">
                   If you need help or feel unsafe, you can always ask for help.
                 </p>
-                <Button className="w-full bg-red-600 hover:bg-red-700">
+                <Button
+                  className="w-full bg-red-600 hover:bg-red-700"
+                  onClick={() =>
+                    requestHelp("Emergency help request from child dashboard")
+                  }
+                >
                   🆘 Ask for Help
                 </Button>
               </CardContent>
