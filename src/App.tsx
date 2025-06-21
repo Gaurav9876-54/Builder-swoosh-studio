@@ -10,7 +10,9 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Alerts from "./pages/Alerts";
+import AlertsEnhanced from "./pages/AlertsEnhanced";
 import ScreenTime from "./pages/ScreenTime";
+import ScreenTimeEnhanced from "./pages/ScreenTimeEnhanced";
 import Settings from "./pages/Settings";
 
 // Authentication Pages
@@ -26,6 +28,9 @@ import AddChild from "./pages/onboarding/AddChild";
 
 // Profile Pages
 import ParentProfile from "./pages/profile/ParentProfile";
+
+// Family Management
+import FamilyManagement from "./pages/family/FamilyManagement";
 
 import NotFound from "./pages/NotFound";
 
@@ -120,7 +125,7 @@ const App = () => (
               path="/alerts"
               element={
                 <ProtectedRoute>
-                  <Alerts />
+                  <AlertsEnhanced />
                 </ProtectedRoute>
               }
             />
@@ -128,7 +133,15 @@ const App = () => (
               path="/screen-time"
               element={
                 <ProtectedRoute>
-                  <ScreenTime />
+                  <ScreenTimeEnhanced />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/family"
+              element={
+                <ProtectedRoute>
+                  <FamilyManagement />
                 </ProtectedRoute>
               }
             />
