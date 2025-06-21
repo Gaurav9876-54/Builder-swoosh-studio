@@ -5,6 +5,7 @@ import {
   MonitoringConfig,
 } from "@/services/realTimeMonitoring";
 import { useAuth } from "@/contexts/AuthContext";
+import { WS_URL } from "@/config/env";
 
 export interface RealTimeData {
   screenTime: Map<string, any>;
@@ -137,7 +138,7 @@ export const useRealTimeData = (options: UseRealTimeDataOptions = {}) => {
         enabledFeatures,
         refreshInterval,
         // TODO: Replace with your actual WebSocket URL
-        websocketUrl: import.meta.env.VITE_WS_URL,
+        websocketUrl: WS_URL,
       };
 
       await realTimeMonitoring.initialize(config);
