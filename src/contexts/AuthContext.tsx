@@ -392,6 +392,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("safeguard_token");
     localStorage.removeItem("safeguard_refresh");
     localStorage.removeItem("safeguard_remember");
+    // Keep the has_seen_app flag so returning users go to login, not splash
     dispatch({ type: "LOGOUT" });
 
     // Redirect to login page after logout
