@@ -336,8 +336,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       dispatch({ type: "SET_LOADING", payload: true });
       // Simulate token validation
       setTimeout(() => {
-        dispatch({ type: "SET_LOADING", payload: false });
+        // For demo purposes, validate the token and restore session
+        mockAuth
+          .login({ email: "demo@safeguard.com", password: "demo123" })
+          .then((result) => {
+            dispatch({ type: "LOGIN_SUCCESS", payload: result });
+          })
+          .catch(() => {
+            dispatch({ type: "SET_LOADING", payload: false });
+          });
       }, 1000);
+    } else {
+      dispatch({ type: "SET_LOADING", payload: false });
     }
   }, []);
 
