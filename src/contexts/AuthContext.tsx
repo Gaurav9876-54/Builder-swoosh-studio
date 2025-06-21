@@ -354,6 +354,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const login = async (credentials: LoginCredentials) => {
     dispatch({ type: "SET_LOADING", payload: true });
     try {
+      // Check if demo mode was requested from splash screen
+      const isDemoMode = localStorage.getItem("safeguard_demo_mode");
+
       const result = await mockAuth.login(credentials);
 
       // Store tokens
@@ -363,6 +366,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (credentials.rememberMe) {
         localStorage.setItem("safeguard_remember", "true");
+      }
+
+      if (isDemoMode) {
+        // Clear demo mode flag after use
+        localStorage.removeItem("safeguard_demo_mode");
+        // Add demo indicator to user data
+        result.user.firstName = "Demo User";
       }
 
       dispatch({ type: "LOGIN_SUCCESS", payload: result });
